@@ -39,7 +39,10 @@
     "react-native-webview": "13.13.5",
     "expo-build-properties": "~0.14.6",
     "expo-blur": "~14.1.5",
-    "react-native-reanimated": "~3.17.4"
+    "react-native-reanimated": "~3.17.4",
+    "lucide-react-native": "^0.460.0",
+    "@expo-google-fonts/inter": "^0.2.3",
+    "react-native-svg": "15.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
