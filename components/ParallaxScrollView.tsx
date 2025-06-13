@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useWindowDimensions } from 'react-native';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -8,7 +8,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedView } from '@/components/ThemedView';
-import { useBottomTabOverflow } from '@/components/ui/TabBarBackground';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 const HEADER_HEIGHT = 250;
@@ -26,7 +25,9 @@ export default function ParallaxScrollView({
   const colorScheme = useColorScheme() ?? 'light';
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
-  const bottom = useBottomTabOverflow();
+  const { height: windowHeight } = useWindowDimensions();
+  const bottomInset = windowHeight * 0.1; // Approximate bottom tab bar height
+
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -49,8 +50,8 @@ export default function ParallaxScrollView({
       <Animated.ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}
-        scrollIndicatorInsets={{ bottom }}
-        contentContainerStyle={{ paddingBottom: bottom }}>
+        scrollIndicatorInsets={{ bottom: bottomInset }}
+        contentContainerStyle={{ paddingBottom: bottomInset }}>
         <Animated.View
           style={[
             styles.header,
