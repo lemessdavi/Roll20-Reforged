@@ -1,28 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { 
-  User, 
-  Bell, 
-  Shield, 
-  Palette, 
-  Volume2, 
-  Wifi, 
-  Download, 
-  HelpCircle, 
-  MessageSquare, 
-  Star, 
-  LogOut,
-  ChevronRight,
-  Moon,
-  Vibrate,
-  Globe
-} from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Alert, ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
+import { SFSymbol } from 'react-native-sfsymbols';
 
 interface SettingItem {
   id: string;
@@ -68,7 +51,7 @@ export default function SettingsScreen() {
           id: 'profile',
           title: 'Profile',
           subtitle: 'Manage your account information',
-          icon: <User color={primary} size={20} />,
+          icon: <SFSymbol name="person.circle" color={primary} size={20} />,
           type: 'navigation',
           onPress: () => router.push('/profile'),
         },
@@ -76,7 +59,7 @@ export default function SettingsScreen() {
           id: 'privacy',
           title: 'Privacy & Security',
           subtitle: 'Control your privacy settings',
-          icon: <Shield color={primary} size={20} />,
+          icon: <SFSymbol name="shield" color={primary} size={20} />,
           type: 'navigation',
           onPress: () => router.push('/privacy'),
         },
@@ -89,7 +72,7 @@ export default function SettingsScreen() {
           id: 'notifications',
           title: 'Notifications',
           subtitle: 'Get notified about campaigns and messages',
-          icon: <Bell color={primary} size={20} />,
+          icon: <SFSymbol name="bell" color={primary} size={20} />,
           type: 'toggle',
           value: notifications,
           onToggle: setNotifications,
@@ -98,7 +81,7 @@ export default function SettingsScreen() {
           id: 'darkMode',
           title: 'Dark Mode',
           subtitle: 'Switch between light and dark themes',
-          icon: <Moon color={primary} size={20} />,
+          icon: <SFSymbol name="moon" color={primary} size={20} />,
           type: 'toggle',
           value: darkMode,
           onToggle: setDarkMode,
@@ -107,7 +90,7 @@ export default function SettingsScreen() {
           id: 'haptic',
           title: 'Haptic Feedback',
           subtitle: 'Feel vibrations for dice rolls and interactions',
-          icon: <Vibrate color={primary} size={20} />,
+          icon: <SFSymbol name="hand.tap" color={primary} size={20} />,
           type: 'toggle',
           value: hapticFeedback,
           onToggle: setHapticFeedback,
@@ -116,7 +99,7 @@ export default function SettingsScreen() {
           id: 'language',
           title: 'Language',
           subtitle: 'English',
-          icon: <Globe color={primary} size={20} />,
+          icon: <SFSymbol name="globe" color={primary} size={20} />,
           type: 'navigation',
           onPress: () => router.push('/language'),
         },
@@ -129,7 +112,7 @@ export default function SettingsScreen() {
           id: 'autoDownload',
           title: 'Auto-download Content',
           subtitle: 'Download maps and assets automatically',
-          icon: <Download color={primary} size={20} />,
+          icon: <SFSymbol name="arrow.down.circle" color={primary} size={20} />,
           type: 'toggle',
           value: autoDownload,
           onToggle: setAutoDownload,
@@ -138,7 +121,7 @@ export default function SettingsScreen() {
           id: 'storage',
           title: 'Storage & Data',
           subtitle: 'Manage downloaded content',
-          icon: <Wifi color={primary} size={20} />,
+          icon: <SFSymbol name="wifi" color={primary} size={20} />,
           type: 'navigation',
           onPress: () => router.push('/storage'),
         },
@@ -151,7 +134,7 @@ export default function SettingsScreen() {
           id: 'help',
           title: 'Help Center',
           subtitle: 'Get help and find answers',
-          icon: <HelpCircle color={primary} size={20} />,
+          icon: <SFSymbol name="questionmark.circle" color={primary} size={20} />,
           type: 'navigation',
           onPress: () => router.push('/help'),
         },
@@ -159,7 +142,7 @@ export default function SettingsScreen() {
           id: 'feedback',
           title: 'Send Feedback',
           subtitle: 'Help us improve the app',
-          icon: <MessageSquare color={primary} size={20} />,
+          icon: <SFSymbol name="message" color={primary} size={20} />,
           type: 'navigation',
           onPress: () => router.push('/feedback'),
         },
@@ -167,7 +150,7 @@ export default function SettingsScreen() {
           id: 'rate',
           title: 'Rate the App',
           subtitle: 'Share your experience',
-          icon: <Star color={primary} size={20} />,
+          icon: <SFSymbol name="star" color={primary} size={20} />,
           type: 'action',
           onPress: () => console.log('Rate app'),
         },
@@ -179,7 +162,7 @@ export default function SettingsScreen() {
         {
           id: 'logout',
           title: 'Sign Out',
-          icon: <LogOut color={danger} size={20} />,
+          icon: <SFSymbol name="rectangle.portrait.and.arrow.right" color={danger} size={20} />,
           type: 'action',
           destructive: true,
           onPress: handleLogout,
@@ -226,7 +209,7 @@ export default function SettingsScreen() {
               />
             )}
             {item.type === 'navigation' && (
-              <ChevronRight color={muted} size={20} />
+              <SFSymbol name="chevron.right" color={muted} size={20} />
             )}
           </View>
         </View>
@@ -250,7 +233,7 @@ export default function SettingsScreen() {
           <Card style={styles.profileCard} variant="elevated">
             <View style={styles.profileContent}>
               <View style={styles.profileAvatar}>
-                <User color={primary} size={32} />
+                <SFSymbol name="person.circle" color={primary} size={32} />
               </View>
               <View style={styles.profileInfo}>
                 <ThemedText type="semiBold" style={styles.profileName}>
@@ -267,7 +250,7 @@ export default function SettingsScreen() {
                 style={styles.editProfileButton}
                 onPress={() => router.push('/profile')}
               >
-                <ChevronRight color={muted} size={20} />
+                <SFSymbol name="chevron.right" color={muted} size={20} />
               </TouchableOpacity>
             </View>
           </Card>

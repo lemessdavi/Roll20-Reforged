@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { Card } from '@/components/ui/Card';
+import { ThemedView } from '@/components/ThemedView';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Plus, Users, MessageCircle, Calendar, Crown, UserPlus, Settings } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SFSymbol } from 'react-native-sfsymbols';
 
 interface Group {
   id: string;
@@ -133,7 +133,7 @@ export default function GroupsScreen() {
             style={[styles.createButton, { backgroundColor: primary }]}
             onPress={() => router.push('/group/create')}
           >
-            <Plus color="#FFFFFF" size={24} />
+            <SFSymbol name="plus" color="#FFFFFF" size={24} />
           </TouchableOpacity>
         </View>
 
@@ -142,7 +142,7 @@ export default function GroupsScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${primary}20` }]}>
-                <Users color={primary} size={20} />
+                <SFSymbol name="person.3" color={primary} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -158,7 +158,7 @@ export default function GroupsScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${success}20` }]}>
-                <MessageCircle color={success} size={20} />
+                <SFSymbol name="bubble.left.and.bubble.right" color={success} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -174,7 +174,7 @@ export default function GroupsScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${warning}20` }]}>
-                <Calendar color={warning} size={20} />
+                <SFSymbol name="calendar" color={warning} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -228,7 +228,7 @@ export default function GroupsScreen() {
                     <Image source={{ uri: group.avatar }} style={styles.groupAvatar} />
                     {group.isPrivate && (
                       <View style={[styles.privateBadge, { backgroundColor: warning }]}>
-                        <Settings color="#FFFFFF" size={12} />
+                        <SFSymbol name="lock" color="#FFFFFF" size={12} />
                       </View>
                     )}
                   </View>
@@ -247,68 +247,53 @@ export default function GroupsScreen() {
                     
                     <View style={styles.groupMetaRow}>
                       <View style={styles.metaItem}>
-                        <Crown color={muted} size={14} />
+                        <SFSymbol name="crown" color={muted} size={14} />
                         <ThemedText style={[styles.metaText, { color: muted }]}>
                           {group.owner}
                         </ThemedText>
                       </View>
-                      
+
                       <View style={styles.metaItem}>
-                        <Users color={muted} size={14} />
+                        <SFSymbol name="person.3" color={muted} size={14} />
                         <ThemedText style={[styles.metaText, { color: muted }]}>
-                          {group.memberCount.toLocaleString()} members
+                          {group.memberCount}/{group.maxMembers}
+                        </ThemedText>
+                      </View>
+
+                      <View style={styles.metaItem}>
+                        <SFSymbol name="clock" color={muted} size={14} />
+                        <ThemedText style={[styles.metaText, { color: muted }]}>
+                          {formatLastActivity(group.lastActivity)}
                         </ThemedText>
                       </View>
                     </View>
                   </View>
                 </View>
 
-                <ThemedText style={[styles.groupDescription, { color: muted }]} numberOfLines={2}>
-                  {group.description}
-                </ThemedText>
+                <View style={styles.groupContent}>
+                  <ThemedText style={[styles.groupDescription, { color: muted }]} numberOfLines={2}>
+                    {group.description}
+                  </ThemedText>
 
-                {/* Tags */}
-                <View style={styles.tagsContainer}>
-                  {group.tags.slice(0, 3).map((tag, index) => (
-                    <View key={index} style={[styles.tag, { backgroundColor: `${primary}15` }]}>
-                      <ThemedText style={[styles.tagText, { color: primary }]}>
-                        {tag}
-                      </ThemedText>
-                    </View>
-                  ))}
-                  {group.tags.length > 3 && (
-                    <ThemedText style={[styles.moreTagsText, { color: muted }]}>
-                      +{group.tags.length - 3} more
-                    </ThemedText>
+                  <View style={styles.tagsContainer}>
+                    {group.tags.map((tag, index) => (
+                      <View key={index} style={[styles.tag, { backgroundColor: `${primary}20` }]}>
+                        <ThemedText style={[styles.tagText, { color: primary }]}>
+                          {tag}
+                        </ThemedText>
+                      </View>
+                    ))}
+                  </View>
+
+                  {!group.isJoined && (
+                    <TouchableOpacity
+                      style={[styles.joinButton, { backgroundColor: primary }]}
+                      onPress={() => joinGroup(group.id)}
+                    >
+                      <SFSymbol name="person.badge.plus" color="#FFFFFF" size={16} />
+                      <ThemedText style={styles.joinButtonText}>Join Group</ThemedText>
+                    </TouchableOpacity>
                   )}
-                </View>
-
-                {/* Footer */}
-                <View style={styles.groupFooter}>
-                  <View style={styles.activityInfo}>
-                    <ThemedText style={[styles.lastActivity, { color: muted }]}>
-                      Last active {formatLastActivity(group.lastActivity)}
-                    </ThemedText>
-                  </View>
-                  
-                  <View style={styles.groupActions}>
-                    {group.isJoined ? (
-                      <TouchableOpacity 
-                        style={styles.actionButton}
-                        onPress={() => router.push(`/group/${group.id}/chat`)}
-                      >
-                        <MessageCircle color={primary} size={20} />
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity 
-                        style={[styles.joinButton, { backgroundColor: primary }]}
-                        onPress={() => joinGroup(group.id)}
-                      >
-                        <UserPlus color="#FFFFFF" size={16} />
-                        <ThemedText style={styles.joinButtonText}>Join</ThemedText>
-                      </TouchableOpacity>
-                    )}
-                  </View>
                 </View>
               </Card>
             </TouchableOpacity>
@@ -319,7 +304,7 @@ export default function GroupsScreen() {
         {filteredGroups.length === 0 && (
           <View style={styles.emptyState}>
             <View style={[styles.emptyIcon, { backgroundColor: `${muted}20` }]}>
-              <Users color={muted} size={48} />
+              <SFSymbol name="person.3" color={muted} size={48} />
             </View>
             <ThemedText type="subtitle" style={styles.emptyTitle}>
               {selectedFilter === 'joined' ? 'No groups joined yet' : 'No groups found'}
@@ -512,45 +497,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter-Medium',
   },
-  moreTagsText: {
-    fontSize: 12,
-    fontStyle: 'italic',
-  },
-  groupFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  activityInfo: {
+  groupContent: {
     flex: 1,
-  },
-  lastActivity: {
-    fontSize: 12,
-  },
-  groupActions: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  actionButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(124, 58, 237, 0.1)',
-  },
-  joinButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    gap: 6,
-  },
-  joinButtonText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontFamily: 'Inter-Medium',
   },
   emptyState: {
     alignItems: 'center',

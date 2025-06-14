@@ -1,11 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Vibration, Platform } from 'react-native';
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Dice1, Dice2, Dice3, Dice4, Dice5, Dice6, Plus, Minus, RotateCcw, History, Zap } from 'lucide-react-native';
+import React, { useRef, useState } from 'react';
+import { Animated, Platform, ScrollView, StyleSheet, TouchableOpacity, Vibration, View } from 'react-native';
+import { SFSymbol } from 'react-native-sfsymbols';
 
 interface DiceRoll {
   id: string;
@@ -30,6 +29,7 @@ export default function DiceScreen() {
   const muted = useThemeColor({}, 'muted');
   const success = useThemeColor({}, 'success');
   const warning = useThemeColor({}, 'warning');
+  const danger = useThemeColor({}, 'danger');
   const surface = useThemeColor({}, 'surface');
 
   const [diceConfigs, setDiceConfigs] = useState<Record<number, DiceConfig>>({
@@ -172,16 +172,7 @@ export default function DiceScreen() {
 
   const getDiceIcon = (sides: number, size: number = 24) => {
     const iconProps = { size, color: primary };
-    switch (sides) {
-      case 4: return <Dice1 {...iconProps} />;
-      case 6: return <Dice6 {...iconProps} />;
-      case 8: return <Dice2 {...iconProps} />;
-      case 10: return <Dice3 {...iconProps} />;
-      case 12: return <Dice4 {...iconProps} />;
-      case 20: return <Dice5 {...iconProps} />;
-      case 100: return <Dice6 {...iconProps} />;
-      default: return <Dice6 {...iconProps} />;
-    }
+    return <SFSymbol name="dice.fill" {...iconProps} />;
   };
 
   const formatTime = (date: Date) => {
@@ -203,36 +194,34 @@ export default function DiceScreen() {
             style={[styles.clearButton, { backgroundColor: `${warning}20` }]}
             onPress={clearAll}
           >
-            <RotateCcw color={warning} size={20} />
+            <SFSymbol name="arrow.counterclockwise" color={warning} size={20} />
           </TouchableOpacity>
         </View>
 
         {/* Last Roll Result */}
         {lastRoll && (
           <Animated.View 
-            style={[
-              styles.lastRollContainer,
-              {
-                transform: [
-                  { scale: scaleAnimation },
-                  {
-                    rotateZ: rollAnimation.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0deg', '360deg'],
-                    }),
-                  },
-                ],
-              },
-            ]}
+            style={{
+              ...styles.lastRollContainer,
+              transform: [
+                { scale: scaleAnimation },
+                {
+                  rotateZ: rollAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '360deg'],
+                  }),
+                },
+              ],
+            }}
           >
-            <Card style={[styles.lastRollCard, { backgroundColor: primary }]} variant="elevated">
+            <Card style={{ ...styles.lastRollCard, backgroundColor: primary }} variant="elevated">
               <View style={styles.lastRollContent}>
                 <View style={styles.lastRollHeader}>
                   <ThemedText style={styles.lastRollExpression}>
                     {lastRoll.expression}
                   </ThemedText>
                   <View style={styles.lastRollBadge}>
-                    <Zap color="#FFFFFF" size={16} />
+                    <SFSymbol name="bolt.fill" color="#FFFFFF" size={16} />
                   </View>
                 </View>
                 <ThemedText style={styles.lastRollTotal}>
@@ -249,120 +238,112 @@ export default function DiceScreen() {
           </Animated.View>
         )}
 
-        {/* Dice Configuration */}
-        <View style={styles.diceContainer}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>Configure Dice</ThemedText>
-          
-          <View style={styles.diceGrid}>
-            {DICE_TYPES.map((sides) => {
-              const config = diceConfigs[sides];
-              return (
-                <Card key={sides} style={styles.diceCard}>
-                  <View style={styles.diceHeader}>
-                    {getDiceIcon(sides, 28)}
-                    <ThemedText type="semiBold" style={styles.diceLabel}>
-                      d{sides}
-                    </ThemedText>
-                  </View>
-
-                  {/* Count Controls */}
-                  <View style={styles.controlRow}>
-                    <ThemedText style={[styles.controlLabel, { color: muted }]}>Count</ThemedText>
-                    <View style={styles.controlButtons}>
-                      <TouchableOpacity
-                        style={[styles.controlButton, { backgroundColor: surface }]}
-                        onPress={() => updateDiceConfig(sides, 'count', config.count - 1)}
-                      >
-                        <Minus color={muted} size={16} />
-                      </TouchableOpacity>
-                      <ThemedText style={styles.controlValue}>{config.count}</ThemedText>
-                      <TouchableOpacity
-                        style={[styles.controlButton, { backgroundColor: surface }]}
-                        onPress={() => updateDiceConfig(sides, 'count', config.count + 1)}
-                      >
-                        <Plus color={muted} size={16} />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
-                  {/* Modifier Controls */}
-                  <View style={styles.controlRow}>
-                    <ThemedText style={[styles.controlLabel, { color: muted }]}>Modifier</ThemedText>
-                    <View style={styles.controlButtons}>
-                      <TouchableOpacity
-                        style={[styles.controlButton, { backgroundColor: surface }]}
-                        onPress={() => updateDiceConfig(sides, 'modifier', config.modifier - 1)}
-                      >
-                        <Minus color={muted} size={16} />
-                      </TouchableOpacity>
-                      <ThemedText style={styles.controlValue}>
-                        {config.modifier > 0 ? `+${config.modifier}` : config.modifier}
-                      </ThemedText>
-                      <TouchableOpacity
-                        style={[styles.controlButton, { backgroundColor: surface }]}
-                        onPress={() => updateDiceConfig(sides, 'modifier', config.modifier + 1)}
-                      >
-                        <Plus color={muted} size={16} />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-
-                  {/* Roll Button */}
-                  <Button
-                    title="Roll"
-                    onPress={() => performRoll(sides)}
-                    size="small"
-                    style={styles.rollButton}
-                    disabled={config.count === 0}
-                  />
-                </Card>
-              );
-            })}
-          </View>
-
-          {/* Roll All Button */}
-          <Button
-            title="Roll All Dice"
-            onPress={rollAll}
-            size="large"
-            style={styles.rollAllButton}
-          />
+        {/* Dice Controls */}
+        <View style={styles.diceControls}>
+          {DICE_TYPES.map((sides) => (
+            <Card key={sides} style={styles.diceCard} variant="elevated">
+              <View style={styles.diceHeader}>
+                {getDiceIcon(sides)}
+                <ThemedText type="semiBold" style={styles.diceTitle}>
+                  d{sides}
+                </ThemedText>
+              </View>
+              <View style={styles.diceControls}>
+                <TouchableOpacity
+                  style={[styles.controlButton, { backgroundColor: `${primary}20` }]}
+                  onPress={() => updateDiceConfig(sides, 'count', diceConfigs[sides].count - 1)}
+                >
+                  <SFSymbol name="minus" color={primary} size={20} />
+                </TouchableOpacity>
+                <ThemedText style={styles.controlValue}>
+                  {diceConfigs[sides].count}
+                </ThemedText>
+                <TouchableOpacity
+                  style={[styles.controlButton, { backgroundColor: `${primary}20` }]}
+                  onPress={() => updateDiceConfig(sides, 'count', diceConfigs[sides].count + 1)}
+                >
+                  <SFSymbol name="plus" color={primary} size={20} />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.modifierControls}>
+                <TouchableOpacity
+                  style={[styles.controlButton, { backgroundColor: `${primary}20` }]}
+                  onPress={() => updateDiceConfig(sides, 'modifier', diceConfigs[sides].modifier - 1)}
+                >
+                  <SFSymbol name="minus" color={primary} size={20} />
+                </TouchableOpacity>
+                <ThemedText style={styles.modifierValue}>
+                  {diceConfigs[sides].modifier > 0 ? `+${diceConfigs[sides].modifier}` : diceConfigs[sides].modifier}
+                </ThemedText>
+                <TouchableOpacity
+                  style={[styles.controlButton, { backgroundColor: `${primary}20` }]}
+                  onPress={() => updateDiceConfig(sides, 'modifier', diceConfigs[sides].modifier + 1)}
+                >
+                  <SFSymbol name="plus" color={primary} size={20} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                style={[styles.rollButton, { backgroundColor: primary }]}
+                onPress={() => performRoll(sides)}
+              >
+                <SFSymbol name="dice.fill" color="#FFFFFF" size={20} />
+                <ThemedText style={styles.rollButtonText}>Roll</ThemedText>
+              </TouchableOpacity>
+            </Card>
+          ))}
         </View>
 
+        {/* Roll All Button */}
+        <TouchableOpacity
+          style={[styles.rollAllButton, { backgroundColor: success }]}
+          onPress={rollAll}
+        >
+          <SFSymbol name="dice.fill" color="#FFFFFF" size={24} />
+          <ThemedText style={styles.rollAllButtonText}>Roll All</ThemedText>
+        </TouchableOpacity>
+
         {/* Roll History */}
-        {rollHistory.length > 0 && (
-          <View style={styles.historyContainer}>
-            <View style={styles.historyHeader}>
-              <History color={muted} size={20} />
-              <ThemedText type="subtitle" style={styles.sectionTitle}>Roll History</ThemedText>
+        <Card style={styles.historyCard} variant="elevated">
+          <View style={styles.historyHeader}>
+            <View style={styles.historyTitleContainer}>
+              <ThemedText type="semiBold" style={styles.historyTitle}>
+                Roll History
+              </ThemedText>
+              <SFSymbol name="clock" color={muted} size={20} />
             </View>
-            
-            <View style={styles.historyList}>
-              {rollHistory.slice(0, 10).map((roll) => (
-                <Card key={roll.id} style={styles.historyCard}>
-                  <View style={styles.historyRow}>
-                    <View style={styles.historyInfo}>
-                      <ThemedText type="semiBold" style={styles.historyExpression}>
-                        {roll.expression}
-                      </ThemedText>
-                      <ThemedText style={[styles.historyTime, { color: muted }]}>
-                        {formatTime(roll.timestamp)}
-                      </ThemedText>
-                    </View>
-                    <View style={styles.historyResult}>
-                      <ThemedText type="semiBold" style={[styles.historyTotal, { color: primary }]}>
-                        {roll.total}
-                      </ThemedText>
-                      <ThemedText style={[styles.historyRolls, { color: muted }]}>
-                        [{roll.result.join(', ')}]
-                      </ThemedText>
-                    </View>
-                  </View>
-                </Card>
-              ))}
-            </View>
+            {rollHistory.length > 0 && (
+              <TouchableOpacity onPress={() => setRollHistory([])}>
+                <SFSymbol name="trash" color={danger} size={20} />
+              </TouchableOpacity>
+            )}
           </View>
-        )}
+          {rollHistory.length === 0 ? (
+            <View style={styles.emptyHistory}>
+              <SFSymbol name="dice" color={muted} size={32} />
+              <ThemedText style={[styles.emptyHistoryText, { color: muted }]}>
+                No rolls yet
+              </ThemedText>
+            </View>
+          ) : (
+            <ScrollView style={styles.historyList}>
+              {rollHistory.map((roll) => (
+                <View key={roll.id} style={styles.historyItem}>
+                  <View style={styles.historyItemContent}>
+                    <ThemedText style={styles.historyExpression}>
+                      {roll.expression}
+                    </ThemedText>
+                    <ThemedText style={styles.historyTime}>
+                      {formatTime(roll.timestamp)}
+                    </ThemedText>
+                  </View>
+                  <ThemedText style={styles.historyTotal}>
+                    {roll.total}
+                  </ThemedText>
+                </View>
+              ))}
+            </ScrollView>
+          )}
+        </Card>
       </ScrollView>
     </ThemedView>
   );
@@ -439,22 +420,17 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: 14,
   },
-  diceContainer: {
+  diceControls: {
     paddingHorizontal: 20,
     marginBottom: 32,
-  },
-  sectionTitle: {
-    marginBottom: 16,
-  },
-  diceGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 24,
+    gap: 16,
   },
   diceCard: {
     width: '48%',
     padding: 16,
+    marginBottom: 16,
   },
   diceHeader: {
     flexDirection: 'row',
@@ -462,23 +438,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 8,
   },
-  diceLabel: {
+  diceTitle: {
     fontSize: 18,
   },
-  controlRow: {
+  diceControls: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
-  },
-  controlLabel: {
-    fontSize: 12,
-    fontFamily: 'Inter-Medium',
-  },
-  controlButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
   },
   controlButton: {
     width: 28,
@@ -493,15 +460,38 @@ const styles = StyleSheet.create({
     minWidth: 32,
     textAlign: 'center',
   },
+  modifierControls: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  modifierValue: {
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+    minWidth: 32,
+    textAlign: 'center',
+  },
   rollButton: {
     marginTop: 8,
+  },
+  rollButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+    marginLeft: 8,
   },
   rollAllButton: {
     marginTop: 8,
   },
-  historyContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 100,
+  rollAllButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+    marginLeft: 8,
+  },
+  historyCard: {
+    padding: 12,
   },
   historyHeader: {
     flexDirection: 'row',
@@ -509,18 +499,23 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 16,
   },
+  historyTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  historyTitle: {
+    fontSize: 18,
+  },
   historyList: {
     gap: 8,
   },
-  historyCard: {
-    padding: 12,
-  },
-  historyRow: {
+  historyItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  historyInfo: {
+  historyItemContent: {
     flex: 1,
   },
   historyExpression: {
@@ -530,14 +525,16 @@ const styles = StyleSheet.create({
   historyTime: {
     fontSize: 12,
   },
-  historyResult: {
-    alignItems: 'flex-end',
-  },
   historyTotal: {
     fontSize: 18,
     marginBottom: 2,
   },
-  historyRolls: {
-    fontSize: 12,
+  emptyHistory: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyHistoryText: {
+    fontSize: 16,
   },
 });

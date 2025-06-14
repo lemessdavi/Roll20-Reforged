@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Plus, Users, Calendar, Dice6, Map, Crown } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SFSymbol } from 'react-native-sfsymbols';
 
 interface Campaign {
   id: string;
@@ -101,7 +100,7 @@ export default function CampaignsScreen() {
             style={[styles.createButton, { backgroundColor: primary }]}
             onPress={() => router.push('/campaign/create')}
           >
-            <Plus color="#FFFFFF" size={24} />
+            <SFSymbol name="plus" color="#FFFFFF" size={24} />
           </TouchableOpacity>
         </View>
 
@@ -110,7 +109,7 @@ export default function CampaignsScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${primary}20` }]}>
-                <Map color={primary} size={20} />
+                <SFSymbol name="map" color={primary} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -126,7 +125,7 @@ export default function CampaignsScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${success}20` }]}>
-                <Users color={success} size={20} />
+                <SFSymbol name="person.3" color={success} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -142,7 +141,7 @@ export default function CampaignsScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${warning}20` }]}>
-                <Calendar color={warning} size={20} />
+                <SFSymbol name="calendar" color={warning} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -220,14 +219,14 @@ export default function CampaignsScreen() {
 
                   <View style={styles.campaignMeta}>
                     <View style={styles.metaItem}>
-                      <Crown color={muted} size={16} />
+                      <SFSymbol name="crown" color={muted} size={16} />
                       <ThemedText style={[styles.metaText, { color: muted }]}>
                         DM: {campaign.dmName}
                       </ThemedText>
                     </View>
 
                     <View style={styles.metaItem}>
-                      <Users color={muted} size={16} />
+                      <SFSymbol name="person.3" color={muted} size={16} />
                       <ThemedText style={[styles.metaText, { color: muted }]}>
                         {campaign.playerCount}/{campaign.maxPlayers} players
                       </ThemedText>
@@ -235,7 +234,7 @@ export default function CampaignsScreen() {
 
                     {campaign.nextSession && (
                       <View style={styles.metaItem}>
-                        <Calendar color={muted} size={16} />
+                        <SFSymbol name="calendar" color={muted} size={16} />
                         <ThemedText style={[styles.metaText, { color: muted }]}>
                           {formatNextSession(campaign.nextSession)}
                         </ThemedText>
@@ -259,7 +258,7 @@ export default function CampaignsScreen() {
             >
               <Card style={styles.actionCardInner}>
                 <View style={[styles.actionIcon, { backgroundColor: `${primary}20` }]}>
-                  <Dice6 color={primary} size={24} />
+                  <SFSymbol name="dice" color={primary} size={24} />
                 </View>
                 <ThemedText type="semiBold" style={styles.actionTitle}>Dice Roller</ThemedText>
                 <ThemedText style={[styles.actionSubtitle, { color: muted }]}>
@@ -274,7 +273,7 @@ export default function CampaignsScreen() {
             >
               <Card style={styles.actionCardInner}>
                 <View style={[styles.actionIcon, { backgroundColor: `${success}20` }]}>
-                  <Users color={success} size={24} />
+                  <SFSymbol name="person.3" color={success} size={24} />
                 </View>
                 <ThemedText type="semiBold" style={styles.actionTitle}>Characters</ThemedText>
                 <ThemedText style={[styles.actionSubtitle, { color: muted }]}>

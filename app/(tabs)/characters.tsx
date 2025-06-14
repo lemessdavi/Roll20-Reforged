@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { Card } from '@/components/ui/Card';
+import { ThemedView } from '@/components/ThemedView';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Plus, Sword, Shield, Heart, Zap, User, Star, Crown } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { SFSymbol } from 'react-native-sfsymbols';
 
 interface Character {
   id: string;
@@ -138,7 +138,7 @@ export default function CharactersScreen() {
             style={[styles.createButton, { backgroundColor: primary }]}
             onPress={() => router.push('/character/create')}
           >
-            <Plus color="#FFFFFF" size={24} />
+            <SFSymbol name="plus" color="#FFFFFF" size={24} />
           </TouchableOpacity>
         </View>
 
@@ -147,7 +147,7 @@ export default function CharactersScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${primary}20` }]}>
-                <User color={primary} size={20} />
+                <SFSymbol name="person" color={primary} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -163,7 +163,7 @@ export default function CharactersScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${success}20` }]}>
-                <Star color={success} size={20} />
+                <SFSymbol name="star" color={success} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -179,7 +179,7 @@ export default function CharactersScreen() {
           <Card style={styles.statCard}>
             <View style={styles.statContent}>
               <View style={[styles.statIcon, { backgroundColor: `${warning}20` }]}>
-                <Crown color={warning} size={20} />
+                <SFSymbol name="crown" color={warning} size={20} />
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
@@ -248,83 +248,51 @@ export default function CharactersScreen() {
                       </View>
                     </View>
                     
-                    <ThemedText style={[styles.characterClass, { color: muted }]}>
-                      {character.race} {character.class}
-                    </ThemedText>
-                    
-                    {character.campaign && (
-                      <ThemedText style={[styles.campaignText, { color: primary }]}>
-                        {character.campaign}
+                    <View style={styles.classRow}>
+                      <ThemedText style={[styles.classText, { color: muted }]}>
+                        {character.race} {character.class}
                       </ThemedText>
-                    )}
+                      {character.campaign && (
+                        <ThemedText style={[styles.campaignText, { color: muted }]}>
+                          • {character.campaign}
+                        </ThemedText>
+                      )}
+                    </View>
                   </View>
                 </View>
 
-                {/* Character Stats */}
-                <View style={styles.statsRow}>
-                  <View style={styles.statItem}>
-                    <View style={styles.statIconContainer}>
-                      <Heart color={getHealthColor(character.hitPoints.current, character.hitPoints.maximum)} size={16} />
-                    </View>
-                    <View>
+                <View style={styles.characterStats}>
+                  <View style={styles.statRow}>
+                    <View style={styles.statItem}>
+                      <SFSymbol name="heart.fill" color={getHealthColor(character.hitPoints.current, character.hitPoints.maximum)} size={16} />
                       <ThemedText style={styles.statValue}>
                         {character.hitPoints.current}/{character.hitPoints.maximum}
                       </ThemedText>
-                      <ThemedText style={[styles.statLabel, { color: muted }]}>HP</ThemedText>
                     </View>
-                  </View>
 
-                  <View style={styles.statItem}>
-                    <View style={styles.statIconContainer}>
-                      <Shield color={primary} size={16} />
-                    </View>
-                    <View>
-                      <ThemedText style={styles.statValue}>{character.armorClass}</ThemedText>
-                      <ThemedText style={[styles.statLabel, { color: muted }]}>AC</ThemedText>
-                    </View>
-                  </View>
-
-                  <View style={styles.statItem}>
-                    <View style={styles.statIconContainer}>
-                      <Sword color={warning} size={16} />
-                    </View>
-                    <View>
+                    <View style={styles.statItem}>
+                      <SFSymbol name="shield.fill" color={primary} size={16} />
                       <ThemedText style={styles.statValue}>
-                        {formatModifier(getAbilityModifier(character.abilities.strength))}
+                        AC {character.armorClass}
                       </ThemedText>
-                      <ThemedText style={[styles.statLabel, { color: muted }]}>STR</ThemedText>
                     </View>
                   </View>
 
-                  <View style={styles.statItem}>
-                    <View style={styles.statIconContainer}>
-                      <Zap color={success} size={16} />
-                    </View>
-                    <View>
-                      <ThemedText style={styles.statValue}>
-                        {formatModifier(getAbilityModifier(character.abilities.dexterity))}
-                      </ThemedText>
-                      <ThemedText style={[styles.statLabel, { color: muted }]}>DEX</ThemedText>
-                    </View>
+                  <View style={styles.abilitiesContainer}>
+                    {Object.entries(character.abilities).map(([ability, score]) => (
+                      <View key={ability} style={styles.abilityItem}>
+                        <ThemedText style={[styles.abilityLabel, { color: muted }]}>
+                          {ability.slice(0, 3).toUpperCase()}
+                        </ThemedText>
+                        <ThemedText style={styles.abilityScore}>
+                          {score}
+                        </ThemedText>
+                        <ThemedText style={[styles.abilityModifier, { color: primary }]}>
+                          {formatModifier(getAbilityModifier(score))}
+                        </ThemedText>
+                      </View>
+                    ))}
                   </View>
-                </View>
-
-                {/* Health Bar */}
-                <View style={styles.healthBarContainer}>
-                  <View style={styles.healthBarBackground}>
-                    <View 
-                      style={[
-                        styles.healthBarFill, 
-                        { 
-                          width: `${(character.hitPoints.current / character.hitPoints.maximum) * 100}%`,
-                          backgroundColor: getHealthColor(character.hitPoints.current, character.hitPoints.maximum)
-                        }
-                      ]} 
-                    />
-                  </View>
-                  <ThemedText style={[styles.healthPercentage, { color: muted }]}>
-                    {Math.round((character.hitPoints.current / character.hitPoints.maximum) * 100)}%
-                  </ThemedText>
                 </View>
               </Card>
             </TouchableOpacity>
@@ -335,7 +303,7 @@ export default function CharactersScreen() {
         {filteredCharacters.length === 0 && (
           <View style={styles.emptyState}>
             <View style={[styles.emptyIcon, { backgroundColor: `${muted}20` }]}>
-              <User color={muted} size={48} />
+              <SFSymbol name="person" color={muted} size={48} />
             </View>
             <ThemedText type="subtitle" style={styles.emptyTitle}>
               No characters found
@@ -490,58 +458,59 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter-Medium',
   },
-  characterClass: {
-    fontSize: 14,
+  classRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: 4,
+  },
+  classText: {
+    fontSize: 14,
+    flex: 1,
   },
   campaignText: {
     fontSize: 12,
     fontFamily: 'Inter-Medium',
   },
-  statsRow: {
+  characterStats: {
+    marginBottom: 16,
+  },
+  statRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   statItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  statIconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   statValue: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
     marginBottom: 2,
   },
-  healthBarContainer: {
+  abilitiesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  abilityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
-  healthBarBackground: {
-    flex: 1,
-    height: 6,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  healthBarFill: {
-    height: '100%',
-    borderRadius: 3,
-  },
-  healthPercentage: {
+  abilityLabel: {
     fontSize: 12,
     fontFamily: 'Inter-Medium',
-    minWidth: 32,
-    textAlign: 'right',
+  },
+  abilityScore: {
+    fontSize: 14,
+    fontFamily: 'Inter-SemiBold',
+  },
+  abilityModifier: {
+    fontSize: 12,
+    fontFamily: 'Inter-Medium',
   },
   emptyState: {
     alignItems: 'center',

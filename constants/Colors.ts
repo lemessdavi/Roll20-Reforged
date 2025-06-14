@@ -15,6 +15,7 @@ export const Colors = {
     success: '#059669',
     muted: '#6B7280',
     mutedLight: '#9CA3AF',
+    tint: '#7C3AED',
   },
   dark: {
     text: '#F9FAFB',
@@ -32,5 +33,6 @@ export const Colors = {
     success: '#10B981',
     muted: '#9CA3AF',
     mutedLight: '#6B7280',
+    tint: '#8B5CF6',
   },
 };

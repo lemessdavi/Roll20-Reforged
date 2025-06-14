@@ -1,30 +1,14 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Vibration, Platform, TextInput } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
-import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import { Card } from '@/components/ui/Card';
+import { ThemedView } from '@/components/ThemedView';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { 
-  ArrowLeft, 
-  Dice1, 
-  Dice2, 
-  Dice3, 
-  Dice4, 
-  Dice5, 
-  Dice6, 
-  Plus, 
-  Minus, 
-  RotateCcw, 
-  History, 
-  Zap,
-  TrendingUp,
-  TrendingDown,
-  Calculator
-} from 'lucide-react-native';
-import { rollFromExpression, rollAdvantage, rollDisadvantage, DiceResult } from '@/utils/dice';
+import { DiceResult, rollAdvantage, rollDisadvantage, rollFromExpression } from '@/utils/dice';
+import { Stack, useRouter } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import { Animated, Platform, ScrollView, StyleSheet, TouchableOpacity, Vibration, View } from 'react-native';
+import { SFSymbol } from 'react-native-sfsymbols';
 
 interface QuickRoll {
   id: string;
@@ -59,7 +43,7 @@ export default function DiceRollerScreen() {
       name: 'D20',
       expression: '1d20',
       description: 'Standard ability check',
-      icon: <Dice6 color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="dice.fill" color="#FFFFFF" size={24} />,
       color: primary,
     },
     {
@@ -67,7 +51,7 @@ export default function DiceRollerScreen() {
       name: 'Advantage',
       expression: 'advantage',
       description: 'Roll 2d20, take highest',
-      icon: <TrendingUp color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="arrow.up.right" color="#FFFFFF" size={24} />,
       color: success,
     },
     {
@@ -75,7 +59,7 @@ export default function DiceRollerScreen() {
       name: 'Disadvantage',
       expression: 'disadvantage',
       description: 'Roll 2d20, take lowest',
-      icon: <TrendingDown color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="arrow.down.right" color="#FFFFFF" size={24} />,
       color: danger,
     },
     {
@@ -83,7 +67,7 @@ export default function DiceRollerScreen() {
       name: 'D6',
       expression: '1d6',
       description: 'Basic damage die',
-      icon: <Dice6 color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="dice.fill" color="#FFFFFF" size={24} />,
       color: warning,
     },
     {
@@ -91,7 +75,7 @@ export default function DiceRollerScreen() {
       name: 'D8',
       expression: '1d8',
       description: 'Longsword damage',
-      icon: <Dice2 color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="dice.fill" color="#FFFFFF" size={24} />,
       color: '#8B5CF6',
     },
     {
@@ -99,7 +83,7 @@ export default function DiceRollerScreen() {
       name: 'D10',
       expression: '1d10',
       description: 'Heavy crossbow damage',
-      icon: <Dice3 color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="dice.fill" color="#FFFFFF" size={24} />,
       color: '#06B6D4',
     },
     {
@@ -107,7 +91,7 @@ export default function DiceRollerScreen() {
       name: 'D12',
       expression: '1d12',
       description: 'Greataxe damage',
-      icon: <Dice4 color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="dice.fill" color="#FFFFFF" size={24} />,
       color: '#F59E0B',
     },
     {
@@ -115,7 +99,7 @@ export default function DiceRollerScreen() {
       name: 'Fireball',
       expression: '8d6',
       description: 'Classic spell damage',
-      icon: <Zap color="#FFFFFF" size={24} />,
+      icon: <SFSymbol name="bolt.fill" color="#FFFFFF" size={24} />,
       color: '#EF4444',
     },
   ];
@@ -205,12 +189,12 @@ export default function DiceRollerScreen() {
           title: 'Advanced Dice Roller',
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
-              <ArrowLeft color={text} size={24} />
+              <SFSymbol name="chevron.left" color={text} size={24} />
             </TouchableOpacity>
           ),
           headerRight: () => (
             <TouchableOpacity onPress={clearHistory}>
-              <RotateCcw color={muted} size={20} />
+              <SFSymbol name="arrow.counterclockwise" color={muted} size={20} />
             </TouchableOpacity>
           ),
         }}
@@ -242,7 +226,7 @@ export default function DiceRollerScreen() {
                     {lastRoll.expression}
                   </ThemedText>
                   <View style={styles.lastRollBadge}>
-                    <Zap color="#FFFFFF" size={16} />
+                    <SFSymbol name="bolt.fill" color="#FFFFFF" size={16} />
                   </View>
                 </View>
                 <ThemedText style={styles.lastRollTotal}>
@@ -321,7 +305,7 @@ export default function DiceRollerScreen() {
         {rollHistory.length > 0 && (
           <View style={styles.historySection}>
             <View style={styles.historyHeader}>
-              <History color={muted} size={20} />
+              <SFSymbol name="clock" color={muted} size={20} />
               <ThemedText type="subtitle" style={styles.sectionTitle}>Roll History</ThemedText>
             </View>
             
