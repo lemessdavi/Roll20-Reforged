@@ -24,36 +24,42 @@ const mockCampaigns: Campaign[] = [
   {
     id: '1',
     name: 'The Lost Mines of Phandelver',
-    description: 'A classic D&D adventure for new players. Explore goblin ambushes, mysterious ruins, and face the Black Spider.',
+    description:
+      'A classic D&D adventure for new players. Explore goblin ambushes, mysterious ruins, and face the Black Spider.',
     gameSystem: 'D&D 5e',
     playerCount: 4,
     maxPlayers: 6,
     nextSession: new Date('2025-01-20T19:00:00'),
     dmName: 'Sarah Chen',
-    image: 'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg?auto=compress&cs=tinysrgb&w=800',
     isActive: true,
   },
   {
     id: '2',
     name: 'Curse of Strahd',
-    description: 'Gothic horror in the mist-shrouded realm of Barovia. Face vampires, werewolves, and ancient curses.',
+    description:
+      'Gothic horror in the mist-shrouded realm of Barovia. Face vampires, werewolves, and ancient curses.',
     gameSystem: 'D&D 5e',
     playerCount: 5,
     maxPlayers: 6,
     nextSession: new Date('2025-01-22T20:00:00'),
     dmName: 'Marcus Rodriguez',
-    image: 'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg?auto=compress&cs=tinysrgb&w=800',
     isActive: true,
   },
   {
     id: '3',
     name: 'Cyberpunk Red: Night City',
-    description: 'High-tech, low-life adventures in the dark future of Night City. Corporate espionage and street survival.',
+    description:
+      'High-tech, low-life adventures in the dark future of Night City. Corporate espionage and street survival.',
     gameSystem: 'Cyberpunk Red',
     playerCount: 3,
     maxPlayers: 5,
     dmName: 'Alex Kim',
-    image: 'https://images.pexels.com/photos/2047905/pexels-photo-2047905.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image:
+      'https://images.pexels.com/photos/2047905/pexels-photo-2047905.jpeg?auto=compress&cs=tinysrgb&w=800',
     isActive: false,
   },
 ];
@@ -68,17 +74,18 @@ export default function CampaignsScreen() {
 
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'active' | 'dm'>('all');
 
-  const filteredCampaigns = mockCampaigns.filter(campaign => {
+  const filteredCampaigns = mockCampaigns.filter((campaign) => {
     if (selectedFilter === 'active') return campaign.isActive;
     if (selectedFilter === 'dm') return campaign.dmName === 'Sarah Chen'; // Mock current user
     return true;
   });
 
-  const formatNextSession = (date: Date) => {
+  const formatNextSession = (date?: Date) => {
+    if (!date) return 'No upcoming session';
     const now = new Date();
     const diffTime = date.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+    if (diffDays < 0) return 'No upcoming session';
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Tomorrow';
     if (diffDays < 7) return `In ${diffDays} days`;
@@ -91,12 +98,14 @@ export default function CampaignsScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <ThemedText type="title" style={styles.title}>Campaigns</ThemedText>
+            <ThemedText type="title" style={styles.title}>
+              Campaigns
+            </ThemedText>
             <ThemedText style={[styles.subtitle, { color: muted }]}>
               Your tabletop adventures await
             </ThemedText>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.createButton, { backgroundColor: primary }]}
             onPress={() => router.push('/campaign/create')}
           >
@@ -115,11 +124,9 @@ export default function CampaignsScreen() {
                 <ThemedText type="semiBold" style={styles.statNumber}>
                   {mockCampaigns.length}
                 </ThemedText>
-                <ThemedText style={[styles.statLabel, { color: muted }]}>
-                  Total Campaigns
-                </ThemedText>
               </View>
             </View>
+            <ThemedText style={[styles.statLabel, { color: muted }]}>Total Campaigns</ThemedText>
           </Card>
 
           <Card style={styles.statCard}>
@@ -131,11 +138,9 @@ export default function CampaignsScreen() {
                 <ThemedText type="semiBold" style={styles.statNumber}>
                   {mockCampaigns.reduce((acc, c) => acc + c.playerCount, 0)}
                 </ThemedText>
-                <ThemedText style={[styles.statLabel, { color: muted }]}>
-                  Active Players
-                </ThemedText>
               </View>
             </View>
+            <ThemedText style={[styles.statLabel, { color: muted }]}>Active Players</ThemedText>
           </Card>
 
           <Card style={styles.statCard}>
@@ -145,13 +150,11 @@ export default function CampaignsScreen() {
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
-                  {mockCampaigns.filter(c => c.nextSession).length}
-                </ThemedText>
-                <ThemedText style={[styles.statLabel, { color: muted }]}>
-                  Upcoming Sessions
+                  {mockCampaigns.filter((c) => c.nextSession).length}
                 </ThemedText>
               </View>
             </View>
+            <ThemedText style={[styles.statLabel, { color: muted }]}>Upcoming Sessions</ThemedText>
           </Card>
         </View>
 
@@ -213,7 +216,10 @@ export default function CampaignsScreen() {
                     </View>
                   </View>
 
-                  <ThemedText style={[styles.campaignDescription, { color: muted }]} numberOfLines={2}>
+                  <ThemedText
+                    style={[styles.campaignDescription, { color: muted }]}
+                    numberOfLines={2}
+                  >
                     {campaign.description}
                   </ThemedText>
 
@@ -249,33 +255,33 @@ export default function CampaignsScreen() {
 
         {/* Quick Actions */}
         <View style={styles.quickActions}>
-          <ThemedText type="subtitle" style={styles.sectionTitle}>Quick Actions</ThemedText>
-          
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Quick Actions
+          </ThemedText>
+
           <View style={styles.actionGrid}>
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/dice-roller')}
-            >
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/dice-roller')}>
               <Card style={styles.actionCardInner}>
                 <View style={[styles.actionIcon, { backgroundColor: `${primary}20` }]}>
                   <SFSymbol name="dice" color={primary} size={24} />
                 </View>
-                <ThemedText type="semiBold" style={styles.actionTitle}>Dice Roller</ThemedText>
+                <ThemedText type="semiBold" style={styles.actionTitle}>
+                  Dice Roller
+                </ThemedText>
                 <ThemedText style={[styles.actionSubtitle, { color: muted }]}>
                   Roll dice for any game
                 </ThemedText>
               </Card>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => router.push('/characters')}
-            >
+            <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/characters')}>
               <Card style={styles.actionCardInner}>
                 <View style={[styles.actionIcon, { backgroundColor: `${success}20` }]}>
                   <SFSymbol name="person.3" color={success} size={24} />
                 </View>
-                <ThemedText type="semiBold" style={styles.actionTitle}>Characters</ThemedText>
+                <ThemedText type="semiBold" style={styles.actionTitle}>
+                  Characters
+                </ThemedText>
                 <ThemedText style={[styles.actionSubtitle, { color: muted }]}>
                   Manage your heroes
                 </ThemedText>
@@ -330,12 +336,15 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    padding: 16,
+    padding: 12,
+    minWidth: 100,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   statContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
   statIcon: {
     width: 40,
@@ -349,7 +358,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   statLabel: {
-    fontSize: 12,
+    marginTop: 6,
+    fontSize: 11,
+    lineHeight: 16,
+    flexWrap: 'wrap',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    maxWidth: 80,
   },
   filterContainer: {
     flexDirection: 'row',
@@ -362,10 +377,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: 'transparent',
+    minWidth: 90,
+    alignItems: 'center',
   },
   filterText: {
     fontSize: 14,
     fontFamily: 'Inter-Medium',
+    textAlign: 'center',
   },
   campaignsContainer: {
     paddingHorizontal: 20,
@@ -375,6 +393,7 @@ const styles = StyleSheet.create({
   campaignCard: {
     overflow: 'hidden',
     borderRadius: 16,
+    marginBottom: 4,
   },
   campaignHeader: {
     position: 'relative',
@@ -401,7 +420,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Medium',
   },
   campaignContent: {
-    padding: 16,
+    padding: 14,
   },
   campaignTitleRow: {
     flexDirection: 'row',
@@ -433,9 +452,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   metaItem: {
+    marginLeft: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 20,
   },
   metaText: {
     fontSize: 12,

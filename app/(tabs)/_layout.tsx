@@ -1,7 +1,7 @@
 import {
-  createNativeBottomTabNavigator,
-  NativeBottomTabNavigationEventMap,
-  NativeBottomTabNavigationOptions,
+    createNativeBottomTabNavigator,
+    NativeBottomTabNavigationEventMap,
+    NativeBottomTabNavigationOptions,
 } from '@bottom-tabs/react-navigation';
 import { ParamListBase, TabNavigationState } from '@react-navigation/native';
 import { withLayoutContext } from 'expo-router';
@@ -26,6 +26,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme].surface,
+          borderTopWidth: 0,
+          elevation: 8,
+        },
       }}>
       <Tabs.Screen
         name="index"
