@@ -32,7 +32,7 @@ const mockCampaigns: Campaign[] = [
     nextSession: new Date('2025-01-20T19:00:00'),
     dmName: 'Sarah Chen',
     image:
-      'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://i0.wp.com/jogaod20.com/wp-content/uploads/2023/09/Lost-Mines-of-Phandelver.png?fit=1200%2C630&ssl=1',
     isActive: true,
   },
   {
@@ -45,8 +45,7 @@ const mockCampaigns: Campaign[] = [
     maxPlayers: 6,
     nextSession: new Date('2025-01-22T20:00:00'),
     dmName: 'Marcus Rodriguez',
-    image:
-      'https://images.pexels.com/photos/1666065/pexels-photo-1666065.jpeg?auto=compress&cs=tinysrgb&w=800',
+    image: 'https://keepontheheathlands.com/wp-content/uploads/2017/02/Curse-1.jpg',
     isActive: true,
   },
   {
@@ -59,7 +58,7 @@ const mockCampaigns: Campaign[] = [
     maxPlayers: 5,
     dmName: 'Alex Kim',
     image:
-      'https://images.pexels.com/photos/2047905/pexels-photo-2047905.jpeg?auto=compress&cs=tinysrgb&w=800',
+      'https://uploads.jovemnerd.com.br/wp-content/uploads/2024/10/nc952_ozob__10516pz-scaled.jpg',
     isActive: false,
   },
 ];

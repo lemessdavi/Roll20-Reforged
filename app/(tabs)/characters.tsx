@@ -39,7 +39,7 @@ const mockCharacters: Character[] = [
     hitPoints: { current: 64, maximum: 72 },
     armorClass: 16,
     campaign: 'Lost Mines of Phandelver',
-    avatar: 'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=400',
+    avatar: 'https://i.pinimg.com/564x/90/f7/e5/90f7e50eedb28b5f31bd13d110d9050b.jpg',
     abilities: {
       strength: 14,
       dexterity: 18,
@@ -59,7 +59,8 @@ const mockCharacters: Character[] = [
     hitPoints: { current: 58, maximum: 58 },
     armorClass: 18,
     campaign: 'Curse of Strahd',
-    avatar: 'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=400',
+    avatar:
+      'https://as1.ftcdn.net/jpg/05/65/73/90/1000_F_565739091_E9b0x6ayqgOMAg8PN49eN2GyzMer0Hou.jpg',
     abilities: {
       strength: 16,
       dexterity: 10,
@@ -78,7 +79,7 @@ const mockCharacters: Character[] = [
     level: 4,
     hitPoints: { current: 28, maximum: 32 },
     armorClass: 15,
-    avatar: 'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=400',
+    avatar: 'https://media.craiyon.com/2025-04-03/8O6Alu2zQ-uOPQviMUIz-A.webp',
     abilities: {
       strength: 10,
       dexterity: 18,
@@ -102,7 +103,7 @@ export default function CharactersScreen() {
 
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'active' | 'archived'>('all');
 
-  const filteredCharacters = mockCharacters.filter(character => {
+  const filteredCharacters = mockCharacters.filter((character) => {
     if (selectedFilter === 'active') return character.isActive;
     if (selectedFilter === 'archived') return !character.isActive;
     return true;
@@ -129,12 +130,14 @@ export default function CharactersScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <ThemedText type="title" style={styles.title}>Characters</ThemedText>
+            <ThemedText type="title" style={styles.title}>
+              Characters
+            </ThemedText>
             <ThemedText style={[styles.subtitle, { color: muted }]}>
               Your heroes and adventurers
             </ThemedText>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.createButton, { backgroundColor: primary }]}
             onPress={() => router.push('/character/create')}
           >
@@ -153,11 +156,9 @@ export default function CharactersScreen() {
                 <ThemedText type="semiBold" style={styles.statNumber}>
                   {mockCharacters.length}
                 </ThemedText>
-                <ThemedText style={[styles.statLabel, { color: muted }]}>
-                  Total Characters
-                </ThemedText>
               </View>
             </View>
+            <ThemedText style={[styles.statLabel, { color: muted }]}>Total Characters</ThemedText>
           </Card>
 
           <Card style={styles.statCard}>
@@ -167,13 +168,13 @@ export default function CharactersScreen() {
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
-                  {Math.round(mockCharacters.reduce((acc, c) => acc + c.level, 0) / mockCharacters.length)}
-                </ThemedText>
-                <ThemedText style={[styles.statLabel, { color: muted }]}>
-                  Avg Level
+                  {Math.round(
+                    mockCharacters.reduce((acc, c) => acc + c.level, 0) / mockCharacters.length,
+                  )}
                 </ThemedText>
               </View>
             </View>
+            <ThemedText style={[styles.statLabel, { color: muted }]}>Avg Level</ThemedText>
           </Card>
 
           <Card style={styles.statCard}>
@@ -183,13 +184,11 @@ export default function CharactersScreen() {
               </View>
               <View>
                 <ThemedText type="semiBold" style={styles.statNumber}>
-                  {mockCharacters.filter(c => c.isActive).length}
-                </ThemedText>
-                <ThemedText style={[styles.statLabel, { color: muted }]}>
-                  Active
+                  {mockCharacters.filter((c) => c.isActive).length}
                 </ThemedText>
               </View>
             </View>
+            <ThemedText style={[styles.statLabel, { color: muted }]}>Active</ThemedText>
           </Card>
         </View>
 
@@ -235,7 +234,7 @@ export default function CharactersScreen() {
                       <View style={[styles.activeBadge, { backgroundColor: success }]} />
                     )}
                   </View>
-                  
+
                   <View style={styles.characterInfo}>
                     <View style={styles.nameRow}>
                       <ThemedText type="semiBold" style={styles.characterName}>
@@ -247,7 +246,7 @@ export default function CharactersScreen() {
                         </ThemedText>
                       </View>
                     </View>
-                    
+
                     <View style={styles.classRow}>
                       <ThemedText style={[styles.classText, { color: muted }]}>
                         {character.race} {character.class}
@@ -264,7 +263,14 @@ export default function CharactersScreen() {
                 <View style={styles.characterStats}>
                   <View style={styles.statRow}>
                     <View style={styles.statItem}>
-                      <SFSymbol name="heart.fill" color={getHealthColor(character.hitPoints.current, character.hitPoints.maximum)} size={16} />
+                      <SFSymbol
+                        name="heart.fill"
+                        color={getHealthColor(
+                          character.hitPoints.current,
+                          character.hitPoints.maximum,
+                        )}
+                        size={16}
+                      />
                       <ThemedText style={styles.statValue}>
                         {character.hitPoints.current}/{character.hitPoints.maximum}
                       </ThemedText>
@@ -272,9 +278,7 @@ export default function CharactersScreen() {
 
                     <View style={styles.statItem}>
                       <SFSymbol name="shield.fill" color={primary} size={16} />
-                      <ThemedText style={styles.statValue}>
-                        AC {character.armorClass}
-                      </ThemedText>
+                      <ThemedText style={styles.statValue}>AC {character.armorClass}</ThemedText>
                     </View>
                   </View>
 
@@ -284,9 +288,7 @@ export default function CharactersScreen() {
                         <ThemedText style={[styles.abilityLabel, { color: muted }]}>
                           {ability.slice(0, 3).toUpperCase()}
                         </ThemedText>
-                        <ThemedText style={styles.abilityScore}>
-                          {score}
-                        </ThemedText>
+                        <ThemedText style={styles.abilityScore}>{score}</ThemedText>
                         <ThemedText style={[styles.abilityModifier, { color: primary }]}>
                           {formatModifier(getAbilityModifier(score))}
                         </ThemedText>
@@ -365,12 +367,15 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    padding: 16,
+    padding: 12,
+    minWidth: 100,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   statContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
   statIcon: {
     width: 40,
@@ -384,7 +389,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   statLabel: {
-    fontSize: 12,
+    marginTop: 6,
+    fontSize: 11,
+    lineHeight: 16,
+    flexWrap: 'wrap',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    maxWidth: 80,
   },
   filterContainer: {
     flexDirection: 'row',
@@ -474,11 +485,16 @@ const styles = StyleSheet.create({
   },
   characterStats: {
     marginBottom: 16,
+    paddingHorizontal: 0,
   },
   statRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 8,
+    paddingHorizontal: 0,
+    marginLeft: 16,
+    marginRight: 16,
   },
   statItem: {
     flexDirection: 'row',
@@ -493,20 +509,25 @@ const styles = StyleSheet.create({
   abilitiesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    alignSelf: 'center',
+    marginVertical: 16,
   },
   abilityItem: {
-    flexDirection: 'row',
+    flex: 1,
+    minWidth: 0,
+    maxWidth: '18%',
     alignItems: 'center',
-    gap: 8,
+    flexDirection: 'column',
   },
   abilityLabel: {
     fontSize: 12,
     fontFamily: 'Inter-Medium',
+    marginBottom: 2,
   },
   abilityScore: {
     fontSize: 14,
     fontFamily: 'Inter-SemiBold',
+    marginBottom: 2,
   },
   abilityModifier: {
     fontSize: 12,
